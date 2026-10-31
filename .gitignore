@@ -1,0 +1,16 @@
+# simulation reports
+out/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+uv.lock
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store

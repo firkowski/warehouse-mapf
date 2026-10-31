@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "warehouse-mapf"
+version = "1.0.0"
+description = "Multi-robot task allocation and coordinated motion planning for warehouse goal collection, PDM4AR @ ETH Zurich, exercise 14"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = "==3.11.*"
+dependencies = [
+    "numpy<2.0.0",
+    "scipy==1.14.0",
+    "networkx==3.3",
+    "pydantic==2.12.4",
+    "numpydantic==1.7.0",
+    "cloudpickle==3.1.2",
+    "matplotlib==3.8.2",
+    "shapely==2.0.5",
+    "pyyaml==6.0.1",
+    "frozendict==2.4.4",
+    "tqdm",
+    # simulator + reporting
+    # upstream build of the CommonRoad drivability checker (prebuilt wheels), replaces dg-commons' source-only fork
+    "commonroad-drivability-checker==2024.1",
+    "dg-commons @ https://github.com/idsc-frazzoli/dg-commons/archive/b9d795588c8ed4ad4d5b207e32c459e4ccd52223.tar.gz",
+    "zuper-commons-z7==7.2",
+    "PyGeometry-z7==7.2",
+    "reprep-z7==7.2",
+    "pycontracts3==7.2",
+    "typing_extensions",
+    "decorator",
+    "setuptools<81",  # reprep still imports pkg_resources
+]
+
+[project.scripts]
+warehouse-mapf = "pdm4ar.main:main"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pdm4ar"]
+
+[tool.uv]
+# dg-commons depends on a source-only fork of the CommonRoad drivability checker (needs CMake/Boost/Eigen
+# to build). We drop it in favour of the upstream package above, which ships the same `commonroad_dc` module.
+override-dependencies = ["dg-commonroad-drivability-checker; sys_platform == 'never'"]
